@@ -19,6 +19,11 @@ provider:
             - dynamodb:*
           Resource:
             - Fn::GetAtt: [UsersTable, Arn]
+            - Fn::Join:
+              - "/"
+              -
+                - Fn::GetAtt: [UsersTable, Arn]
+                - "index/*"
             - Fn::GetAtt: [ContestsTable, Arn]
   environment:
     USERS_TABLE: ${self:custom.users.tableName}
