@@ -38,6 +38,8 @@ Resources:
           AttributeType: S
         - AttributeName: contestId
           AttributeType: S
+        - AttributeName: userId
+          AttributeType: S
       KeySchema:
         - AttributeName: ticketId
           KeyType: HASH
@@ -45,6 +47,12 @@ Resources:
         - IndexName: contestIdIndex
           KeySchema:
             - AttributeName: contestId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: userIdIndex
+          KeySchema:
+            - AttributeName: userId
               KeyType: HASH
           Projection:
             ProjectionType: ALL
