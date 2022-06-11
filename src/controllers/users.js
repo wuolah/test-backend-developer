@@ -3,64 +3,41 @@ const usersRepository = require( '../repositories/usersRepository' );
 const getUserByEmail = async ( req, res ) => {
     const { email } = req.params;
 
-    try {
-        const user = await usersRepository.getUserByEmail( email );
+    const user = await usersRepository.getByEmail( email.trim() );
 
-        if ( user ) {
-            res.json( { success: true, user } );
-        } else {
-            res
-                .status( 404 )
-                .json( { success: false, error: 'Could not find user with provided "email"' } );
-        }
-    } catch ( error ) {
-        console.log( error );
-        res.status( 500 ).json( { success: false, error: "Could not retreive user" } );
+    if ( user ) {
+        res.json( { success: true, user } );
+    } else {
+        res
+            .status( 404 )
+            .json( { success: false, error: 'Could not find user with provided "email"' } );
     }
 };
 
 const createUser = async ( req, res ) => {
     const { email, password, name } = req.body;
-    const createdAt = new Date().toISOString();
-    const userId = v4(); // Generate a unique user id
-
-    //TODO: Validate unique email
 
     if ( !email.trim() || !password.trim() || !name.trim() ) {
         res.status( 400 ).json( { success: false, error: 'Some fields missing, check your info and sign up again' } );
     }
 
-    const newUser = {
-        userId,
-        email,
-        hash: bcrypt.hashSync( password, 8 ), // Added simple crypt to protect password information
-        name,
-        createdAt,
+    const user = await usersRepository.getByEmail( email.trim() );
+
+    if ( user ) {
+        res.status( 400 ).json( { success: false, error: 'User already exists' } );
+        return;
     }
 
-    const params = {
-        TableName: USERS_TABLE,
-        Item: newUser,
-    };
+    const newUser = await usersRepository.create( email.trim(), password, name.trim() );
 
-    try {
-        await dynamoDbClient.put( params ).promise();
+    if ( newUser ) {
         res.json(
             {
                 success: true,
-                user: {
-                    userId,
-                    email,
-                    name,
-                    createdAt
-                }
+                user: newUser
             } );
-    } catch ( error ) {
-        console.log( error );
-        res.status( 500 ).json( {
-            success: false,
-            error: "Could not create user"
-        } );
+    } else {
+        res.status( 500 ).json( { success: false, error: 'Could not create user' } );
     }
 };
 

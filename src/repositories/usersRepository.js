@@ -3,9 +3,10 @@ const { v4 } = require( "uuid" );
 const bcrypt = require( 'bcrypt' );
 
 const USERS_TABLE = process.env.USERS_TABLE;
+const TRIGGER_FILE = 'usersRepository';
 const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
 
-const getUserByEmail = async ( email ) => {
+const getByEmail = async ( email ) => {
     const params = {
         TableName: USERS_TABLE,
         IndexName: 'emailIndex',
@@ -26,11 +27,51 @@ const getUserByEmail = async ( email ) => {
             return false;
         }
     } catch ( error ) {
-        console.log( { trigger: 'usersRepository', error } );
+        handleError( 'getByEmail', error );
         return false;
     }
 };
 
+const create = async ( email, password, name ) => {
+    const createdAt = new Date().toISOString();
+    const userId = v4(); // Generate a unique user id
+
+    const newUser = {
+        userId,
+        email,
+        hash: bcrypt.hashSync( password, 8 ), // Added simple crypt to protect password information
+        name,
+        createdAt,
+    }
+
+    const params = {
+        TableName: USERS_TABLE,
+        Item: newUser,
+    };
+
+    try {
+        await dynamoDbClient.put( params ).promise();
+        return {
+            userId,
+            email,
+            name,
+            createdAt
+        };
+    } catch ( error ) {
+        handleError( 'create', error );
+        return false;
+    }
+};
+
+const handleError = ( method, error ) => {
+    console.log( {
+        trigger: TRIGGER_FILE,
+        method,
+        error
+    } );
+};
+
 module.exports = {
-    getUserByEmail
+    getByEmail,
+    create
 };
