@@ -6,6 +6,8 @@ custom:
     tableName: users
   contests:
     tableName: contests
+  tickets:
+    tableName: tickets
 
 provider:
   name: aws
@@ -25,8 +27,16 @@ provider:
                 - Fn::GetAtt: [UsersTable, Arn]
                 - "index/*"
             - Fn::GetAtt: [ContestsTable, Arn]
+            - Fn::GetAtt: [TicketsTable, Arn]
+            - Fn::Join:
+              - "/"
+              -
+                - Fn::GetAtt: [TicketsTable, Arn]
+                - "index/*"
   environment:
     USERS_TABLE: ${self:custom.users.tableName}
+    CONTESTS_TABLE: ${self:custom.contests.tableName}
+    TICKETS_TABLE: ${self:custom.tickets.tableName}
 
 functions:
   api:
