@@ -36,20 +36,12 @@ Resources:
       AttributeDefinitions:
         - AttributeName: ticketId
           AttributeType: S
-        - AttributeName: contestId
-          AttributeType: S
         - AttributeName: userId
           AttributeType: S
       KeySchema:
         - AttributeName: ticketId
           KeyType: HASH
       GlobalSecondaryIndexes:
-        - IndexName: contestIdIndex
-          KeySchema:
-            - AttributeName: contestId
-              KeyType: HASH
-          Projection:
-            ProjectionType: ALL
         - IndexName: userIdIndex
           KeySchema:
             - AttributeName: userId

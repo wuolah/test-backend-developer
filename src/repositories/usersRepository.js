@@ -33,6 +33,25 @@ const getByEmail = async ( email ) => {
     }
 };
 
+const getById = async ( id ) => {
+    const params = {
+        TableName: USERS_TABLE,
+        Key: {
+            userId: id,
+        },
+    };
+
+    try {
+        const { Item } = await dynamoDbClient.get( params ).promise();
+
+        return Item || false;
+    }
+    catch ( error ) {
+        handleError( TRIGGER_FILE, 'getById', error );
+        return false;
+    }
+};
+
 const create = async ( email, password, name ) => {
     const createdAt = new Date().toISOString();
     const userId = v4(); // Generate a unique user id
@@ -66,5 +85,6 @@ const create = async ( email, password, name ) => {
 
 module.exports = {
     getByEmail,
-    create
+    getById,
+    create,
 };

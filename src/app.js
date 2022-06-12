@@ -1,6 +1,7 @@
 const express = require( "express" );
 const serverless = require( "serverless-http" );
 const { getAllContests, getContestById, createContest } = require( "./controllers/contests" );
+const { getAllTickets, createTicket } = require( "./controllers/tickets" );
 const { getUserByEmail, createUser } = require( "./controllers/users" );
 
 const app = express();
@@ -16,6 +17,10 @@ app.post( "/users", createUser );
 app.get( "/contests", getAllContests );
 app.get( '/contests/:id', getContestById );
 app.post( '/contests', createContest );
+
+// Tickets routes
+app.get( "/tickets", getAllTickets ); // To demo purpose, I want to get all tickets
+app.post( "/tickets", createTicket );
 
 // Non-existent routes
 app.use( ( req, res, next ) => {
