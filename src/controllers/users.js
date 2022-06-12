@@ -1,9 +1,9 @@
 const usersRepository = require( '../repositories/usersRepository' );
 
-const getUserByEmail = async ( req, res ) => {
-    const { email } = req.params;
+const getUserByEmailOrLogin = async ( req, res ) => {
+    const { emailLogin } = req.params;
 
-    const user = await usersRepository.getByEmail( email.trim() );
+    const user = await usersRepository.getByEmailOrLogin( emailLogin.trim() );
 
     if ( user ) {
         res.json( { success: true, user } );
@@ -12,26 +12,33 @@ const getUserByEmail = async ( req, res ) => {
 
     res
         .status( 404 )
-        .json( { success: false, error: 'Could not find user with provided "email"' } );
+        .json( { success: false, error: 'Could not find user with provided "email" or "login"' } );
 
 };
 
 const createUser = async ( req, res ) => {
-    const { email, password, name } = req.body;
+    const { email, password, name, login } = req.body;
 
-    if ( !email || !password || !name ) {
+    if ( !email || !password || !name || !login ) {
         res.status( 400 ).json( { success: false, error: 'Some fields missing, check your info and sign up again' } );
         return;
     }
 
-    const user = await usersRepository.getByEmail( email.trim() );
+    const userByEmail = await usersRepository.getByEmail( email.trim() );
 
-    if ( user ) {
-        res.status( 400 ).json( { success: false, error: 'User already exists' } );
+    if ( userByEmail ) {
+        res.status( 400 ).json( { success: false, error: 'User with provided email already exists' } );
         return;
     }
 
-    const newUser = await usersRepository.create( email.trim(), password, name.trim() );
+    const userByLogin = await usersRepository.getByLogin( login.trim() );
+
+    if ( userByLogin ) {
+        res.status( 400 ).json( { success: false, error: 'User with provided login already exists' } );
+        return;
+    }
+
+    const newUser = await usersRepository.create( email.trim(), password, name.trim(), login.trim() );
 
     if ( newUser ) {
         res.json( { success: true, user: newUser } );
@@ -43,6 +50,6 @@ const createUser = async ( req, res ) => {
 
 
 module.exports = {
-    getUserByEmail,
+    getUserByEmailOrLogin,
     createUser
 }

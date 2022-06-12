@@ -7,6 +7,8 @@ Resources:
           AttributeType: S
         - AttributeName: email
           AttributeType: S
+        - AttributeName: login
+          AttributeType: S
       KeySchema:
         - AttributeName: userId
           KeyType: HASH
@@ -14,6 +16,12 @@ Resources:
         - IndexName: emailIndex
           KeySchema:
             - AttributeName: email
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: loginIndex
+          KeySchema:
+            - AttributeName: login
               KeyType: HASH
           Projection:
             ProjectionType: ALL
@@ -38,6 +46,8 @@ Resources:
           AttributeType: S
         - AttributeName: userId
           AttributeType: S
+        - AttributeName: userLogin
+          AttributeType: S
       KeySchema:
         - AttributeName: ticketId
           KeyType: HASH
@@ -45,6 +55,12 @@ Resources:
         - IndexName: userIdIndex
           KeySchema:
             - AttributeName: userId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: userLoginIndex
+          KeySchema:
+            - AttributeName: userLogin
               KeyType: HASH
           Projection:
             ProjectionType: ALL

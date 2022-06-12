@@ -21,6 +21,26 @@ const getAll = async () => {
     }
 };
 
+const getByUserId = async ( userId ) => {
+    const params = {
+        TableName: TICKETS_TABLE,
+        IndexName: 'userIdIndex',
+        KeyConditionExpression: 'userId = :userId',
+        ExpressionAttributeValues: {
+            ':userId': userId,
+        },
+    };
+
+    try {
+        const { Items } = await dynamoDbClient.query( params ).promise();
+
+        return Items || false;
+    } catch ( error ) {
+        handleError( TRIGGER_FILE, 'getByUserId', error );
+        return false;
+    }
+};
+
 const getByUserIdAndAvailability = async ( userId, availability ) => {
     const params = {
         TableName: TICKETS_TABLE,
@@ -43,7 +63,30 @@ const getByUserIdAndAvailability = async ( userId, availability ) => {
     }
 };
 
-const create = async ( userId ) => {
+const getByUserIdAndContest = async ( userId, contest ) => {
+    const params = {
+        TableName: TICKETS_TABLE,
+        IndexName: 'userIdIndex',
+        KeyConditionExpression: 'userId = :userId',
+        FilterExpression: 'contestId = :contestId and available = :available',
+        ExpressionAttributeValues: {
+            ':userId': userId,
+            ':contestId': contest,
+            ':available': false,
+        },
+    };
+
+    try {
+        const { Items } = await dynamoDbClient.query( params ).promise();
+
+        return Items || false;
+    } catch ( error ) {
+        handleError( TRIGGER_FILE, 'getByUserIdAndContest', error );
+        return false;
+    }
+};
+
+const create = async ( { userId, login } ) => {
     const createdAt = new Date().toISOString();
     const ticketId = v4(); // Generate a unique ticket id
 
@@ -51,6 +94,7 @@ const create = async ( userId ) => {
         ticketId,
         contestId: null,
         userId,
+        userLogin: login,
         available: true,
         createdAt,
     };
@@ -95,7 +139,9 @@ const addToContest = async ( ticketId, contestId ) => {
 
 module.exports = {
     getAll,
+    getByUserId,
     getByUserIdAndAvailability,
+    getByUserIdAndContest,
     create,
     addToContest,
 };

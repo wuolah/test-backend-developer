@@ -21,9 +21,9 @@ const getByEmail = async ( email ) => {
         const { Items } = await dynamoDbClient.query( params ).promise();
 
         if ( Items.length ) {
-            const { userId, name, email } = Items[0];
+            const { userId, name, email, login } = Items[0];
 
-            return { userId, name, email };
+            return { userId, name, email, login };
         } else {
             return false;
         }
@@ -31,6 +31,48 @@ const getByEmail = async ( email ) => {
         handleError( TRIGGER_FILE, 'getByEmail', error );
         return false;
     }
+};
+
+const getByLogin = async ( login ) => {
+    const params = {
+        TableName: USERS_TABLE,
+        IndexName: 'loginIndex',
+        KeyConditionExpression: 'login = :login',
+        ExpressionAttributeValues: {
+            ':login': login
+        }
+    };
+
+    try {
+        const { Items } = await dynamoDbClient.query( params ).promise();
+
+        if ( Items.length ) {
+            const { userId, name, email, login } = Items[0];
+
+            return { userId, name, email, login };
+        } else {
+            return false;
+        }
+    } catch ( error ) {
+        handleError( TRIGGER_FILE, 'getByLogin', error );
+        return false;
+    }
+};
+
+const getByEmailOrLogin = async ( emailLogin ) => {
+    const userByEmail = await getByEmail( emailLogin );
+
+    if ( userByEmail ) {
+        return userByEmail;
+    }
+
+    const userByLogin = await getByLogin( emailLogin );
+
+    if ( userByLogin ) {
+        return userByLogin;
+    }
+
+    return false;
 };
 
 const getById = async ( id ) => {
@@ -52,7 +94,7 @@ const getById = async ( id ) => {
     }
 };
 
-const create = async ( email, password, name ) => {
+const create = async ( email, password, name, login ) => {
     const createdAt = new Date().toISOString();
     const userId = v4(); // Generate a unique user id
 
@@ -61,6 +103,7 @@ const create = async ( email, password, name ) => {
         email,
         hash: bcrypt.hashSync( password, 8 ), // Added simple crypt to protect password information
         name,
+        login,
         createdAt,
     }
 
@@ -75,6 +118,7 @@ const create = async ( email, password, name ) => {
             userId,
             email,
             name,
+            login,
             createdAt
         };
     } catch ( error ) {
@@ -85,6 +129,8 @@ const create = async ( email, password, name ) => {
 
 module.exports = {
     getByEmail,
+    getByLogin,
+    getByEmailOrLogin,
     getById,
     create,
 };
