@@ -7,18 +7,21 @@ const getUserByEmail = async ( req, res ) => {
 
     if ( user ) {
         res.json( { success: true, user } );
-    } else {
-        res
-            .status( 404 )
-            .json( { success: false, error: 'Could not find user with provided "email"' } );
+        return;
     }
+
+    res
+        .status( 404 )
+        .json( { success: false, error: 'Could not find user with provided "email"' } );
+
 };
 
 const createUser = async ( req, res ) => {
     const { email, password, name } = req.body;
 
-    if ( !email.trim() || !password.trim() || !name.trim() ) {
+    if ( !email || !password || !name ) {
         res.status( 400 ).json( { success: false, error: 'Some fields missing, check your info and sign up again' } );
+        return;
     }
 
     const user = await usersRepository.getByEmail( email.trim() );
@@ -31,14 +34,11 @@ const createUser = async ( req, res ) => {
     const newUser = await usersRepository.create( email.trim(), password, name.trim() );
 
     if ( newUser ) {
-        res.json(
-            {
-                success: true,
-                user: newUser
-            } );
-    } else {
-        res.status( 500 ).json( { success: false, error: 'Could not create user' } );
+        res.json( { success: true, user: newUser } );
+        return;
     }
+
+    res.status( 500 ).json( { success: false, error: 'Could not create user' } );
 };
 
 

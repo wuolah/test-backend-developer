@@ -1,6 +1,7 @@
 const AWS = require( "aws-sdk" );
 const { v4 } = require( "uuid" );
 const bcrypt = require( 'bcrypt' );
+const handleError = require( '../utils/handleError' );
 
 const USERS_TABLE = process.env.USERS_TABLE;
 const TRIGGER_FILE = 'usersRepository';
@@ -27,7 +28,7 @@ const getByEmail = async ( email ) => {
             return false;
         }
     } catch ( error ) {
-        handleError( 'getByEmail', error );
+        handleError( TRIGGER_FILE, 'getByEmail', error );
         return false;
     }
 };
@@ -58,17 +59,9 @@ const create = async ( email, password, name ) => {
             createdAt
         };
     } catch ( error ) {
-        handleError( 'create', error );
+        handleError( TRIGGER_FILE, 'create', error );
         return false;
     }
-};
-
-const handleError = ( method, error ) => {
-    console.log( {
-        trigger: TRIGGER_FILE,
-        method,
-        error
-    } );
 };
 
 module.exports = {

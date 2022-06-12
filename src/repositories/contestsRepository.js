@@ -1,5 +1,6 @@
 const AWS = require( "aws-sdk" );
 const { v4 } = require( "uuid" );
+const handleError = require( "../utils/handleError" );
 
 const CONTESTS_TABLE = process.env.CONTESTS_TABLE;
 const TRIGGER_FILE = 'contestsRepository';
@@ -15,7 +16,7 @@ const getAll = async () => {
 
         return Items;
     } catch ( error ) {
-        console.log( { trigger: TRIGGER_FILE, error } );
+        handleError( TRIGGER_FILE, 'getAll', error );
         return false;
     }
 };
@@ -34,7 +35,7 @@ const getById = async ( id ) => {
         return Item || false;
     }
     catch ( error ) {
-        console.log( { trigger: TRIGGER_FILE, error } );
+        handleError( TRIGGER_FILE, 'getById', error );
         return false;
     }
 };
@@ -65,7 +66,7 @@ const create = async ( name, description ) => {
         };
     }
     catch ( error ) {
-        console.log( { trigger: TRIGGER_FILE, error } );
+        handleError( TRIGGER_FILE, 'create', error );
         return false;
     }
 };

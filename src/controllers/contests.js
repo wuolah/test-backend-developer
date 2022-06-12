@@ -25,8 +25,9 @@ const getContestById = async ( req, res ) => {
 const createContest = async ( req, res ) => {
     const { name, description } = req.body;
 
-    if ( !name.trim() || !description.trim() ) {
-        res.status( 400 ).json( { success: false, error: 'Some fields missing, check your info and sign up again' } );
+    if ( !name || !description ) {
+        res.status( 400 ).json( { success: false, error: 'Some fields missing, check contest info and register again' } );
+        return;
     }
 
     const contest = await contestsRepository.create( name, description );
