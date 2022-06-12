@@ -86,6 +86,25 @@ const getByUserIdAndContest = async ( userId, contest ) => {
     }
 };
 
+const getByContestId = async ( contestId ) => {
+    const params = {
+        TableName: TICKETS_TABLE,
+        FilterExpression: 'contestId = :contestId',
+        ExpressionAttributeValues: {
+            ':contestId': contestId,
+        },
+    };
+
+    try {
+        const { Items } = await dynamoDbClient.scan( params ).promise();
+
+        return Items || false;
+    } catch ( error ) {
+        handleError( TRIGGER_FILE, 'getByContestId', error );
+        return false;
+    }
+};
+
 const create = async ( { userId, login } ) => {
     const createdAt = new Date().toISOString();
     const ticketId = v4(); // Generate a unique ticket id
@@ -142,6 +161,7 @@ module.exports = {
     getByUserId,
     getByUserIdAndAvailability,
     getByUserIdAndContest,
+    getByContestId,
     create,
     addToContest,
 };

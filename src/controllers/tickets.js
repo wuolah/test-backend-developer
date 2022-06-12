@@ -68,6 +68,26 @@ const getTicketsByUser = async ( req, res ) => {
     res.status( 404 ).json( { success: false, error: 'Could not find any tickets' } );
 };
 
+const getTicketsByContestId = async ( req, res ) => {
+    const { id } = req.params;
+
+    if ( !id ) {
+        res.status( 400 ).json( { success: false, error: 'Missing contest id, please send correct information' } );
+        return;
+    }
+
+    const participants = await ticketsRepository.getByContestId( id );
+
+    if ( !participants ) {
+        res.status( 404 ).json( { success: false, error: 'Could not find participants to specified contest' } );
+        return;
+    }
+
+    res.json( { success: true, participants } );
+};
+
+
+
 const createTicket = async ( req, res ) => {
     const { userLogin } = req.body;
 
@@ -135,6 +155,7 @@ const redeemTicket = async ( req, res ) => {
 module.exports = {
     getAllTickets,
     getTicketsByUser,
+    getTicketsByContestId,
     createTicket,
     redeemTicket,
 }

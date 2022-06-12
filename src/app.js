@@ -1,7 +1,7 @@
 const express = require( "express" );
 const serverless = require( "serverless-http" );
 const { getAllContests, getContestById, createContest } = require( "./controllers/contests" );
-const { getAllTickets, createTicket, redeemTicket, getTicketsByUser } = require( "./controllers/tickets" );
+const { getAllTickets, createTicket, redeemTicket, getTicketsByUser, getTicketsByContestId } = require( "./controllers/tickets" );
 const { getUserByEmailOrLogin, createUser } = require( "./controllers/users" );
 
 const app = express();
@@ -16,6 +16,7 @@ app.post( "/users", createUser );
 // Contests routes
 app.get( "/contests", getAllContests );
 app.get( '/contests/:id', getContestById );
+app.get( '/contests/:id/participants', getTicketsByContestId );
 app.post( '/contests', createContest );
 
 // Tickets routes
