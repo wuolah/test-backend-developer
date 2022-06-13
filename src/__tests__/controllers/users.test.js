@@ -54,121 +54,119 @@ jest.mock( "aws-sdk", () => {
 jest.mock( 'uuid' );
 
 describe( 'Users controller', () => {
-    describe( 'getUserByEmailOrLogin', () => {
-        it( 'should return a user by providing an email or username', async () => {
-            const req = mockRequest( { params: { emailLogin: 'johndoe' } } );
-            const res = mockResponse();
+    it( 'should return a user by providing an email or username', async () => {
+        const req = mockRequest( { params: { emailLogin: 'johndoe' } } );
+        const res = mockResponse();
 
-            const mockedUser = {
-                userId: '123',
-                name: 'John Doe',
+        const mockedUser = {
+            userId: '123',
+            name: 'John Doe',
+            email: 'john@doe.com',
+            login: 'johndoe'
+        };
+
+        mockDocumentClient.query.promise.mockReturnValueOnce( { Items: [mockedUser] } );
+
+        await userController.getUserByEmailOrLogin( req, res );
+
+        expect( res.json ).toHaveBeenCalledWith( { success: true, user: mockedUser } );
+    } );
+
+    it( 'should return an error when provide bad username or email', async () => {
+        const req = mockRequest( { params: { emailLogin: 'johndoe' } } );
+        const res = mockResponse();
+
+        mockDocumentClient.query.promise.mockReturnValue( { Items: false } );
+
+        await userController.getUserByEmailOrLogin( req, res );
+
+        expect( res.status ).toHaveBeenCalledWith( 404 );
+        expect( res.json ).toHaveBeenCalledWith( { success: false, error: 'Could not find user with provided "email" or "login"' } );
+    } )
+
+    it( 'should return a new user', async () => {
+        const req = mockRequest( { body: userParamProvider } );
+        const res = mockResponse();
+
+        v4.mockImplementation( () => '123' );
+
+        mockDocumentClient.put.promise.mockReturnValueOnce( {
+            Item: {
+                ...userResponseProvider
+            }
+        } );
+
+        await userController.createUser( req, res );
+
+        expect( res.json ).toHaveBeenCalledWith( {
+            success: true, user: {
+                ...userResponseProvider
+            }
+        } );
+    } );
+
+    it( 'should return an error when creating a new user', async () => {
+        const req = mockRequest( {
+            body: {
                 email: 'john@doe.com',
-                login: 'johndoe'
-            };
-
-            mockDocumentClient.query.promise.mockReturnValueOnce( { Items: [mockedUser] } );
-
-            await userController.getUserByEmailOrLogin( req, res );
-
-            expect( res.json ).toHaveBeenCalledWith( { success: true, user: mockedUser } );
+            }
         } );
 
-        it( 'should return an error when provide bad username or email', async () => {
-            const req = mockRequest( { params: { emailLogin: 'johndoe' } } );
-            const res = mockResponse();
+        const res = mockResponse();
 
-            mockDocumentClient.query.promise.mockReturnValue( { Items: false } );
+        await userController.createUser( req, res );
 
-            await userController.getUserByEmailOrLogin( req, res );
+        expect( res.status ).toHaveBeenCalledWith( 400 );
 
-            expect( res.status ).toHaveBeenCalledWith( 404 );
-            expect( res.json ).toHaveBeenCalledWith( { success: false, error: 'Could not find user with provided "email" or "login"' } );
-        } )
+        expect( res.json ).toHaveBeenCalledWith( { success: false, error: 'Some fields missing, check your info and sign up again' } );
+    } );
 
-        it( 'should return a new user', async () => {
-            const req = mockRequest( { body: userParamProvider } );
-            const res = mockResponse();
+    it( 'should return an error on create user when user by email exists', async () => {
+        const req = mockRequest( { body: userParamProvider } );
 
-            v4.mockImplementation( () => '123' );
+        const res = mockResponse();
 
-            mockDocumentClient.put.promise.mockReturnValueOnce( {
-                Item: {
-                    ...userResponseProvider
-                }
-            } );
-
-            await userController.createUser( req, res );
-
-            expect( res.json ).toHaveBeenCalledWith( {
-                success: true, user: {
-                    ...userResponseProvider
-                }
-            } );
+        usersRepository.getByEmail = jest.fn().mockReturnValueOnce( {
+            Item: {
+                userResponseProvider
+            }
         } );
 
-        it( 'should return an error when creating a new user', async () => {
-            const req = mockRequest( {
-                body: {
-                    email: 'john@doe.com',
-                }
-            } );
+        await userController.createUser( req, res );
 
-            const res = mockResponse();
+        expect( res.status ).toHaveBeenCalledWith( 400 );
+        expect( res.json ).toHaveBeenCalledWith( { success: false, error: 'User with provided email already exists' } );
+    } );
 
-            await userController.createUser( req, res );
+    it( 'should return an error on create user when user by login exists', async () => {
+        const req = mockRequest( { body: userParamProvider } );
 
-            expect( res.status ).toHaveBeenCalledWith( 400 );
+        const res = mockResponse();
 
-            expect( res.json ).toHaveBeenCalledWith( { success: false, error: 'Some fields missing, check your info and sign up again' } );
+        usersRepository.getByLogin = jest.fn().mockReturnValueOnce( {
+            Item: {
+                ...userResponseProvider
+            }
         } );
 
-        it( 'should return an error on create user when user by email exists', async () => {
-            const req = mockRequest( { body: userParamProvider } );
+        await userController.createUser( req, res );
 
-            const res = mockResponse();
+        expect( res.status ).toHaveBeenCalledWith( 400 );
+        expect( res.json ).toHaveBeenCalledWith( { success: false, error: 'User with provided login already exists' } );
+    } );
 
-            usersRepository.getByEmail = jest.fn().mockReturnValueOnce( {
-                Item: {
-                    userResponseProvider
-                }
-            } );
+    it( 'should return an error on create user fails', async () => {
+        const req = mockRequest( { body: userParamProvider } );
+        const res = mockResponse();
 
-            await userController.createUser( req, res );
+        v4.mockImplementation( () => '123' );
 
-            expect( res.status ).toHaveBeenCalledWith( 400 );
-            expect( res.json ).toHaveBeenCalledWith( { success: false, error: 'User with provided email already exists' } );
-        } );
+        usersRepository.create = jest.fn().mockReturnValueOnce( false );
 
-        it( 'should return an error on create user when user by login exists', async () => {
-            const req = mockRequest( { body: userParamProvider } );
+        await userController.createUser( req, res );
 
-            const res = mockResponse();
-
-            usersRepository.getByLogin = jest.fn().mockReturnValueOnce( {
-                Item: {
-                    ...userResponseProvider
-                }
-            } );
-
-            await userController.createUser( req, res );
-
-            expect( res.status ).toHaveBeenCalledWith( 400 );
-            expect( res.json ).toHaveBeenCalledWith( { success: false, error: 'User with provided login already exists' } );
-        } );
-
-        it( 'should return an error on create user fails', async () => {
-            const req = mockRequest( { body: userParamProvider } );
-            const res = mockResponse();
-
-            v4.mockImplementation( () => '123' );
-
-            usersRepository.create = jest.fn().mockReturnValueOnce( false );
-
-            await userController.createUser( req, res );
-
-            expect( res.json ).toHaveBeenCalledWith( {
-                success: false, error: 'Could not create user'
-            } );
+        expect( res.json ).toHaveBeenCalledWith( {
+            success: false, error: 'Could not create user'
         } );
     } );
 } );
