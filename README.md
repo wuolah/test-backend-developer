@@ -53,22 +53,27 @@ Please provide your theoretical approach on how you would implement this process
 - **To obtain honors:**  
   Use Domain Driven Design (DDD) & Hexagonal Architecture: Isolate core business logic (event management and user attendance) from infrastructure concerns such as database access. 🏗️
 
-## Implementation options 🛠️
-You may choose one of the following approaches:
+## Setup and execution
+Provides steps that explain how to install and run your code.
 
-### Non Cloud-native ☁️❌
-- Use Node.js LTS and any framework of your choice.
-- Suggested databases:
-  - **Relational:** MySQL
-  - **NoSQL:** MongoDB (or another, with justification)
+**Example**
+```shell
+# Setup
+git clone git@github.com:<username>/test-backend-developer.git
+cd test-backend-developer
+npm install
 
-### Cloud-native (AWS) ☁️✅
-- Develop a single service as an AWS Lambda function in Node.js.
-- Suggested databases:
-  - **Relational:** AWS Aurora (MySQL-compatible)
-  - **NoSQL:** DocumentDB
-- Use an infrastructure-as-code tool (e.g., CloudFormation, Terraform, Serverless Framework) to deploy resources.
-- Use API Gateway to expose your AWS Lambda.
+# Run tests
+npm run test
+
+# Run development server
+npm run dev
+
+# Run development server (using Docker)
+npm run build
+docker build -t test-backend-developer:1.0.0 .
+docker run -ti test-backend-developer:1.0.0
+```
 
 ## Instructions 🔧
 1. Fork this repository.
