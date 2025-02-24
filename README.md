@@ -39,21 +39,7 @@ You are to build a RESTful API for managing event attendance with the following 
 4. **List attendees:**  
    *As a user, I want to see a list of users who have confirmed their attendance for a specific event.* 👥
 
-### Bonus ✨
-The system should send a reminder notification to users who have confirmed attendance one week before the event.  
-Please provide your theoretical approach on how you would implement this processing (implementation is not required).
-
-## Additional considerations 📌
-- **Documentation:**  
-  Write clear documentation on your design and how to run your code. 📖
-- **Inline comments:**  
-  Include inline comments explaining key or complex decisions. 💡
-- **Commits:**  
-  Make descriptive and frequent commits that reflect the evolution of your solution. 🔄
-- **To obtain honors:**  
-  Use Domain Driven Design (DDD) & Hexagonal Architecture: Isolate core business logic (event management and user attendance) from infrastructure concerns such as database access. 🏗️
-
-## Setup and execution
+Use Node.js (preferably the LTS version) and any tools you typically use in a real-world application.
 Provides steps that explain how to install and run your code.
 
 **Example**
@@ -74,6 +60,20 @@ npm run build
 docker build -t test-backend-developer:1.0.0 .
 docker run -ti test-backend-developer:1.0.0
 ```
+
+### Bonus ✨
+The system should send a reminder notification to users who have confirmed attendance one week before the event.  
+Please provide your theoretical approach on how you would implement this processing (implementation is not required).
+
+## Additional considerations 📌
+- **Documentation:**  
+  Write clear documentation on your design and how to run your code. 📖
+- **Inline comments:**  
+  Include inline comments explaining key or complex decisions. 💡
+- **Commits:**  
+  Make descriptive and frequent commits that reflect the evolution of your solution. 🔄
+- **To obtain honors:**  
+  Use Domain Driven Design (DDD) & Hexagonal Architecture: Isolate core business logic (event management and user attendance) from infrastructure concerns such as database access. 🏗️
 
 ## Instructions 🔧
 1. Fork this repository.
