@@ -66,10 +66,9 @@ You may choose one of the following approaches:
 - Develop a single service as an AWS Lambda function in Node.js.
 - Suggested databases:
   - **Relational:** AWS Aurora (MySQL-compatible)
-  - **NoSQL:** DynamoDB or DocumentDB
+  - **NoSQL:** DocumentDB
 - Use an infrastructure-as-code tool (e.g., CloudFormation, Terraform, Serverless Framework) to deploy resources.
 - Use API Gateway to expose your AWS Lambda.
-- *(Optional)* Explain your approach for error handling (retry policies, DLQs, etc.) and for logging/monitoring in a cloud-native environment.
 
 ## Instructions 🔧
 1. Fork this repository.
