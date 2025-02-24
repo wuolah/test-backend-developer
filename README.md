@@ -22,7 +22,7 @@ We want to see how you handle a practical case that simulates the challenges we 
   - **Open/Closed Principle (OCP):** Make your system easily extendable without modifying existing code. ➕
   - **Dependency Inversion Principle (DIP):** Rely on abstractions rather than concrete implementations. 🔌
 
-## The Test 📝
+## The test 📝
 
 ### Basic requirements
 You are to build a RESTful API for managing event attendance with the following user stories:
