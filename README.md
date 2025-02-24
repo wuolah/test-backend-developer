@@ -4,24 +4,6 @@
 Welcome to Wuolah’s technical test for backend developers.  
 We want to see how you handle a practical case that simulates the challenges we face daily.
 
-## What we are evaluating 🔍
-- **Understanding requirements & problem solving:**  
-  Assess your ability to comprehend requirements and propose appropriate solutions. 🧠
-- **Communication:**  
-  Clearly articulate any doubts and explain your design decisions. 💬
-- **Adaptability to our stack:**  
-  We value familiarity with Node.js and your ability to adapt to our environment. 🔧
-- **API design & best practices:**  
-  Emphasis on idempotency, testability, performance, and scalability. 🚀  
-  - **Idempotency:** Your code should consistently return the same results for valid inputs, regardless of the execution environment. 🔄
-  - **Testability:** Provide tests to ensure your code works as expected. ✅
-  - **Performance & scalability:** Consider potential bottlenecks when handling high volumes of requests. ⚡
-- **SOLID principles:**  
-  Ensure the design adheres to principles such as:  
-  - **Single Responsibility Principle (SRP):** Keep modules/classes focused on one responsibility. 🎯
-  - **Open/Closed Principle (OCP):** Make your system easily extendable without modifying existing code. ➕
-  - **Dependency Inversion Principle (DIP):** Rely on abstractions rather than concrete implementations. 🔌
-
 ## The test 📝
 
 ### Basic requirements
@@ -64,6 +46,24 @@ docker run -ti test-backend-developer:1.0.0
 ### Bonus ✨
 The system should send a reminder notification to users who have confirmed attendance one week before the event.  
 Please provide your theoretical approach on how you would implement this processing (implementation is not required).
+
+## What we are evaluating 🔍
+- **Understanding requirements & problem solving:**  
+  Assess your ability to comprehend requirements and propose appropriate solutions. 🧠
+- **Communication:**  
+  Clearly articulate any doubts and explain your design decisions. 💬
+- **Adaptability to our stack:**  
+  We value familiarity with Node.js and your ability to adapt to our environment. 🔧
+- **API design & best practices:**  
+  Emphasis on idempotency, testability, performance, and scalability. 🚀  
+  - **Idempotency:** Your code should consistently return the same results for valid inputs, regardless of the execution environment. 🔄
+  - **Testability:** Provide tests to ensure your code works as expected. ✅
+  - **Performance & scalability:** Consider potential bottlenecks when handling high volumes of requests. ⚡
+- **SOLID principles:**  
+  Ensure the design adheres to principles such as:  
+  - **Single Responsibility Principle (SRP):** Keep modules/classes focused on one responsibility. 🎯
+  - **Open/Closed Principle (OCP):** Make your system easily extendable without modifying existing code. ➕
+  - **Dependency Inversion Principle (DIP):** Rely on abstractions rather than concrete implementations. 🔌
 
 ## Additional considerations 📌
 - **Documentation:**  
