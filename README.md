@@ -36,11 +36,6 @@ npm run test
 
 # Run development server
 npm run dev
-
-# Run development server (using Docker)
-npm run build
-docker build -t test-backend-developer:1.0.0 .
-docker run -ti test-backend-developer:1.0.0
 ```
 
 ### Bonus ✨
