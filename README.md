@@ -73,12 +73,11 @@ Please provide your theoretical approach on how you would implement this process
 - **Commits:**  
   Make descriptive and frequent commits that reflect the evolution of your solution. 🔄
 - **To obtain honors:**  
-  Use Domain Driven Design (DDD) & Hexagonal Architecture: Isolate core business logic (event management and user attendance) from infrastructure concerns such as database access. 🏗️
+  Use Hexagonal Architecture: Isolate core business logic (event management and user attendance) from infrastructure concerns such as database access. 🏗️
 
 ## Instructions 🔧
 1. Fork this repository.
-2. Create a branch with your full name.
-3. Make frequent, descriptive commits showing your development process.
+2. Create a branch with your name.
 4. Once complete, create a Pull Request for review.
 
 If you have any questions, please open an issue in the repository or contact **juanlu@wuolah.com**.
