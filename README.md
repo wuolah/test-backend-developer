@@ -71,8 +71,17 @@ Please provide your theoretical approach on how you would implement this process
   Use Hexagonal Architecture: Isolate core business logic (event management and user attendance) from infrastructure concerns such as database access. 🏗️
 
 ## Instructions 🔧
-1. Fork this repository.
+
+Two options to submit the test:
+
+### GitHub
+
+1. [Fork](https://github.com/wuolah/test-backend-developer/fork) this repository.
 2. Create a branch with your name.
-4. Once complete, create a Pull Request for review.
+3. Once complete, create a [Pull Request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests) for review.
+
+### Email
+
+Via email to juanlu@wuolah.com
 
 If you have any questions, please open an issue in the repository or contact **juanlu@wuolah.com**.
