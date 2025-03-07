@@ -27,7 +27,7 @@ Provides steps that explain how to install and run your code.
 **Example**
 ```shell
 # Setup
-git clone git@github.com:<username>/test-backend-developer.git
+git clone git@github.com:<your_gh_username>/test-backend-developer.git
 cd test-backend-developer
 npm install
 
